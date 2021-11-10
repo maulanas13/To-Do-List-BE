@@ -1,4 +1,5 @@
 const {mySqlDb} = require("../connections");
+const { hashPass } = require("../helpers");
 
 module.exports = {
     register: async (req, res) => {
@@ -15,9 +16,22 @@ module.exports = {
             let dataInsert = {
                 email,
                 username,
-                password
+                password: hashPass(password)
             };
+            const [result] = await conn.query(sql, [dataInsert]);
+            console.log("Ini result: ", result);
 
+            // Get data user terdaftar utk dimasukan token
+            sql = "SELECT id, username, email, is_verified, role_id FROM user WHERE id = ?";
+            const [userData] = await conn.query(sql, [result.insertId]);
+            console.log("Ini userData: ", userData);
+            console.log("Ini result.insertId: ", result.insertId);
+            const dataToken = {
+                id: userData[0].id,
+                username: userData[0].username,
+                role_id: userData[0].role.id,
+            };
+            conn.release();
         } catch (error) {
             conn.release();
             console.log(error);
