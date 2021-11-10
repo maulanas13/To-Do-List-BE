@@ -1,6 +1,9 @@
 const {mySqlDb} = require("../connections");
-const { hashPass } = require("../helpers");
-const { createTokenEmailVerified, createTokenAccess } = require("../helpers/CreateToken");
+const { hashPass, createToken } = require("../helpers");
+const { createTokenEmailVerified, createTokenAccess } = createToken;
+const handlebars = require("handlebars");
+const path = require("path");
+const fs = require("fs");
 
 module.exports = {
     register: async (req, res) => {
@@ -35,6 +38,13 @@ module.exports = {
             conn.release();
             const emailToken = createTokenEmailVerified(dataToken);
             const accessToken = createTokenAccess(dataToken);
+            let filepath = path.resolve(__dirname, "../template/VerifikasiEmail.html");
+            let htmlString = fs.readFileSync(filepath, "utf-8");
+            const template = handlebars.compile(htmlString);
+            const htmlToEmail = template({
+                name: username,
+                token: emailToken,
+            })
         } catch (error) {
             conn.release();
             console.log(error);
