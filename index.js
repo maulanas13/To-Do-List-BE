@@ -22,6 +22,12 @@ app.use(
   })
 );
 
+// ROUTES BLM TERPASANG DGN BENAR, MSH BIKIN ERROR
+const {authRoute} = require("./src/routes");
+
+app.use("/auth", authRoute);
+// BATAS
+
 app.use(bearerToken());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static("public"));
