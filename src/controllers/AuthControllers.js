@@ -1,5 +1,6 @@
 const {mySqlDb} = require("../connections");
 const { hashPass } = require("../helpers");
+const { createTokenEmailVerified, createTokenAccess } = require("../helpers/CreateToken");
 
 module.exports = {
     register: async (req, res) => {
@@ -32,6 +33,8 @@ module.exports = {
                 role_id: userData[0].role.id,
             };
             conn.release();
+            const emailToken = createTokenEmailVerified(dataToken);
+            const accessToken = createTokenAccess(dataToken);
         } catch (error) {
             conn.release();
             console.log(error);
