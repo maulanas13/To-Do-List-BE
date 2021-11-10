@@ -23,9 +23,9 @@ app.use(
 );
 
 // ROUTES BLM TERPASANG DGN BENAR, MSH BIKIN ERROR
-const {authRoute} = require("./src/routes");
+const {authRoutes} = require("./src/routes");
 
-app.use("/auth", authRoute);
+app.use("/auth", authRoutes);
 // BATAS
 
 app.use(bearerToken());
