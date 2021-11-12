@@ -10,11 +10,32 @@ module.exports = {
         const {email, username, password} = req.body;
         const conn = await mySqlDb.promise().getConnection();
         try {
-            // Cek username sudah terdaftar/belum
-            let sql = "SELECT id FROM user WHERE username = ?";
-            const [dataUser] = await conn.query(sql, username);
-            if (dataUser.length) {
-                throw {message: "Username sudah terdaftar"}
+            // Cek email & username sudah terdaftar/belum
+            let sql = "SELECT id FROM user WHERE email = ?";
+            const [dataUser01] = await conn.query(sql, email);
+            sql = "SELECT id FROM user WHERE username = ?";
+            const [dataUser02] = await conn.query(sql, username);
+
+            if (dataUser01.length || dataUser02.length) {
+                if (dataUser01.length && dataUser02.length) {
+                    conn.release();
+                    console.log("Email & Username sudah terdaftar")
+                    return res.send({messageId: 1, message: "Email & Username sudah terdaftar"});
+                }
+
+                // Cek email sudah terdaftar/belum
+                else if (dataUser01.length) {
+                    conn.release();
+                    console.log("Email sudah terdaftar")
+                    return res.send({messageId: 2, message: "Email sudah terdaftar"});
+                }
+
+                // Cek username sudah terdaftar/belum
+                else {
+                    conn.release();
+                    console.log("Username sudah terdaftar")
+                    return res.send({messageId: 3, message: "Username sudah terdaftar"});
+                } 
             }
 
             // Masukin data regis user ke SQL
