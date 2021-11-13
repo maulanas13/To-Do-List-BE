@@ -39,24 +39,23 @@ module.exports = {
             }
 
             // Masukin data regis user ke SQL
-            sql = "INSERT INTO user SET ?"
+            sql = "INSERT INTO user SET ?";
             let dataInsert = {
                 email,
                 username,
                 password: hashPass(password),
             };
             const [result] = await conn.query(sql, [dataInsert]);
-            console.log("Ini result: ", result);
 
             // Get data user terdaftar utk dimasukan token
             sql = "SELECT id, username, email, is_verified, role_id FROM user WHERE id = ?";
             const [userData] = await conn.query(sql, [result.insertId]); // Pake insertId karena unique (insertId = id)
-            console.log("Ini userData: ", userData);
-            console.log("Ini result.insertId: ", result.insertId);
             const dataToken = {
                 id: userData[0].id,
+                email: userData[0].email,
                 username: userData[0].username,
                 role_id: userData[0].role_id,
+                is_verified: userData[0].is_verified
             };
 
             // Utk melepaskan koneksi dari pool, kemudian lanjut dgn kirim email verifikasi
@@ -64,7 +63,7 @@ module.exports = {
 
             // Bikin token email verifikasi & token akses
             const emailToken = createTokenEmailVerified(dataToken);
-            const accessToken = createTokenAccess(dataToken);
+            // ! const accessToken = createTokenAccess(dataToken); // Kenapa buat accessToken ya? Proteksi verifikasi kan pake email token?
 
             // Ambil template email verifikasi & kirim
             let filepath = path.resolve(__dirname, "../template/VerifikasiEmail.html");
@@ -82,8 +81,24 @@ module.exports = {
             });
 
             // Simpan token pada header
-            res.set("x-token-access", accessToken);
+            res.set("x-token-access", emailToken); // ! Klo dicontoh pake accessToken, kenapa ya?
             return res.status(200).send({...userData[0]});
+        } catch (error) {
+            conn.release();
+            console.log(error);
+            return res.status(500).send({message: error.message || "Server error"});
+        };
+    },
+    verifyRegister: async (req, res) => {
+        console.log("Setelah verifytoken:", req.user)
+        const {id} = req.user;
+        const conn = await mySqlDb.promise().getConnection();
+        try {
+            let sql = "UPDATE user SET is_verified = 1 WHERE id = ?";
+            await conn.query(sql, [id]);
+            sql = "SELECT id, email, username, role_id, is_verified FROM user WHERE id = ?";
+            const [dataUserVerif] = await conn.query(sql, [id]); // Utk redux di FE
+            return res.status(200).send(dataUserVerif[0]);
         } catch (error) {
             conn.release();
             console.log(error);

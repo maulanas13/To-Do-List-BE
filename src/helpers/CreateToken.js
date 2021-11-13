@@ -8,7 +8,7 @@ module.exports = {
     },
     createTokenEmailVerified: (data) => {
         const key = "tokenemailverif";
-        const token = jwt.sign(data, key, {expiresIn: "2m"});
+        const token = jwt.sign(data, key, {expiresIn: "3m"});
         return token;
     }
 }

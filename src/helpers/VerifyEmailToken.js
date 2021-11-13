@@ -1,11 +1,16 @@
 const jwt = require("jsonwebtoken");
 
-export default verifyTokenEmail = (req, res, next) => {
-    jwt.verify(req.token, "tokenemailverif", (err, decode) => {
-        if (err) {
-            return res.status(401).send({message: "Token expired"});
+const verifyEmailToken = (req, res, next) => {
+    const token = req.token;
+    console.log("Token Proses Verify:", token);
+    const key = "tokenemailverif";
+    jwt.verify(token, key, (error, decoded) => {
+        if (error) {
+            return res.status(401).send({message: "Unauthorized/token expired"});
         }
-        req.user = decode;
+        req.user = decoded;
         next();
     });
 }
+
+module.exports = verifyEmailToken;
