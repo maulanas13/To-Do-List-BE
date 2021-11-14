@@ -10,6 +10,10 @@ morgan.token("date", function (req, res) {
   return new Date();
 });
 
+app.get("/", (req, res) => {
+  res.send("<h1>welcome<h1>");
+});
+
 app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms :date")
 );
