@@ -50,7 +50,7 @@ module.exports = {
             // Get data user terdaftar utk dimasukan token
             sql = "SELECT id, username, email, is_verified, role_id FROM user WHERE id = ?";
             const [userData] = await conn.query(sql, [result.insertId]); // Pake insertId karena unique (insertId = id)
-            const dataToken = {
+            const dataForToken = {
                 id: userData[0].id,
                 email: userData[0].email,
                 username: userData[0].username,
@@ -62,8 +62,9 @@ module.exports = {
             conn.release();
 
             // Bikin token email verifikasi & token akses
-            const emailToken = createTokenEmailVerified(dataToken);
-            // ! const accessToken = createTokenAccess(dataToken); // Kenapa buat accessToken ya? Proteksi verifikasi kan pake email token?
+            const emailToken = createTokenEmailVerified(dataForToken);
+            const accessToken = createTokenAccess(dataForToken);
+            // ! const accessToken = createTokenAccess(dataForToken); // Kenapa buat accessToken ya? Proteksi verifikasi kan pake email token?
 
             // Ambil template email verifikasi & kirim
             let filepath = path.resolve(__dirname, "../template/VerifikasiEmail.html");
@@ -81,7 +82,9 @@ module.exports = {
             });
 
             // Simpan token pada header
-            res.set("x-token-access", emailToken); // ! Klo dicontoh pake accessToken, kenapa ya?
+            res.set("x-token-access", accessToken); // ! Klo dicontoh pake accessToken, kenapa ya?
+            // ? Kyknya pake accessToken utk fitur keep login atau endpoint lainnya yg butuh akses token
+
             return res.status(200).send({...userData[0]});
         } catch (error) {
             conn.release();
@@ -90,7 +93,6 @@ module.exports = {
         };
     },
     verifyRegister: async (req, res) => {
-        console.log("Setelah verifytoken:", req.user)
         const {id} = req.user;
         const conn = await mySqlDb.promise().getConnection();
         try {

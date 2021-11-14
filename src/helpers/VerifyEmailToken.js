@@ -2,7 +2,6 @@ const jwt = require("jsonwebtoken");
 
 const verifyEmailToken = (req, res, next) => {
     const token = req.token;
-    console.log("Token Proses Verify:", token);
     const key = "tokenemailverif";
     jwt.verify(token, key, (error, decoded) => {
         if (error) {
