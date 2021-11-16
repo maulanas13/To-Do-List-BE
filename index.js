@@ -26,4 +26,8 @@ app.use(bearerToken());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static("public"));
 
+const {authRoutes} = require("./src/routes");
+
+app.use("/auth", authRoutes);
+
 app.listen(PORT, () => console.log(`API JALAN DI PORT ${PORT}`));

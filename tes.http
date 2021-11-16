@@ -1,0 +1,14 @@
+### Tes register user
+POST http://localhost:5010/auth/register HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "tesproduk13@gmail.coma",
+    "username": "test06",
+    "password": "1234"
+}
+
+### Tes verify email 
+GET http://localhost:5010/auth/verify HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzUsImVtYWlsIjoidGVzcHJvZHVrMTNAZ21haWwuY29tYSIsInVzZXJuYW1lIjoidGVzdDA2Iiwicm9sZV9pZCI6MiwiaXNfdmVyaWZpZWQiOjAsImlhdCI6MTYzNjc3NjExOCwiZXhwIjoxNjM2Nzc2MjM4fQ.R9xAYJJb3c7QKoO660iJurQxawMspH6HbiQz9gvJaNc
