@@ -1,0 +1,30 @@
+### post register
+POST http://localhost:5010/auth/register HTTP/1.1
+Content-Type: application/json
+
+{
+    "username" : "user3",
+    "password" : "12345",
+    "email" : "kevintauran563@gmail.com"
+}
+### get user
+GET http://localhost:5010/user HTTP/1.1
+Content-Type: application/json
+
+### login
+POST http://localhost:5010/auth/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "email" : "kevintauran563@gmail.com",
+    "password" : "12345"
+}
+### get keeplogin
+GET http://localhost:5010/auth/keeplogin HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwidXNlcm5hbWUiOiJrZXZpbiIsInJvbGVfaWQiOjEsImlhdCI6MTYzNjk5Mzc2NSwiZXhwIjoxNjM3MDM2OTY1fQ.U5DYY0ffXq0XNG97HMGUuteHHEDYL1ZJw-klrxaSv2o
+
+{
+    "username" : "kevin ",
+    "password" : "12345"
+}

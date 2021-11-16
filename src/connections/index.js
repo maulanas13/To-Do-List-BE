@@ -1,4 +1,4 @@
-const mysqldb = require("./MySqlDb");
+const mySqlDb = require("./MySqlDb");
 
 module.exports = {
   mySqlDb,

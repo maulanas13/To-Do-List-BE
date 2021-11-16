@@ -13,6 +13,12 @@ morgan.token("date", function (req, res) {
 app.get("/", (req, res) => {
   res.send("<h1>welcome<h1>");
 });
+app.get("/user", async (req, res) => {
+  const conn = mySqlDb.promise();
+  const [result] = await conn.query("select * from user");
+
+  res.send(result);
+});
 
 app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms :date")
@@ -29,5 +35,9 @@ app.use(
 app.use(bearerToken());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static("public"));
+
+const { authRoute } = require("./src/routes");
+
+app.use("/auth", authRoute);
 
 app.listen(PORT, () => console.log(`API JALAN DI PORT ${PORT}`));
