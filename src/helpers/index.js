@@ -1,11 +1,13 @@
-const hashPass = require("./HashPass")
-const createToken = require("./CreateToken")
-const transporter = require("./Transporter")
-const verifyEmailToken = require("./VerifyEmailToken")
+const hashPass = require("./HashPass");
+const createToken = require("./CreateToken");
+const transporter = require("./Transporter");
+const verifyToken = require("./VerifyToken");
+const verifyEmailToken = require("./VerifyEmailToken");
 
 module.exports = {
-    hashPass,
-    createToken,
-    transporter,
-    verifyEmailToken,
+  hashPass,
+  createToken,
+  transporter,
+  verifyToken,
+  verifyEmailToken,
 };

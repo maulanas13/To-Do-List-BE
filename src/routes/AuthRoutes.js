@@ -1,9 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const {authControllers} = require("../controllers");
-const { verifyEmailToken } = require("../helpers");
-const {register, verifyRegister} = authControllers;
+const { verifyToken, verifyEmailToken } = require("./../helpers");
+const { authControllers } = require("./../controllers");
+const { verifyTokenAccess } = verifyToken;
 
+const { login, keeplogin, register, verifyRegister } = authControllers;
+
+router.post("/login", login);
+router.get("/keeplogin", verifyTokenAccess, keeplogin);
 router.post("/register", register);
 router.get("/verify", verifyEmailToken, verifyRegister);
 

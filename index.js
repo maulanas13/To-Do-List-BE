@@ -10,6 +10,16 @@ morgan.token("date", function (req, res) {
   return new Date();
 });
 
+app.get("/", (req, res) => {
+  res.send("<h1>welcome<h1>");
+});
+app.get("/user", async (req, res) => {
+  const conn = mySqlDb.promise();
+  const [result] = await conn.query("select * from user");
+
+  res.send(result);
+});
+
 app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms :date")
 );
@@ -26,7 +36,7 @@ app.use(bearerToken());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static("public"));
 
-const {authRoutes} = require("./src/routes");
+const { authRoutes } = require("./src/routes");
 
 app.use("/auth", authRoutes);
 
