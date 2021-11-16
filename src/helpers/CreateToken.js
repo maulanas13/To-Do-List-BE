@@ -14,4 +14,9 @@ module.exports = {
     const token = jwt.sign(data, key, { expiresIn: "3m" }); // 3menit
     return token;
   },
+  createTokenEmailVerified: (data) => {
+    const key = "tokenemailverif";
+    const token = jwt.sign(data, key, { expiresIn: "3m" });
+    return token;
+  },
 };
